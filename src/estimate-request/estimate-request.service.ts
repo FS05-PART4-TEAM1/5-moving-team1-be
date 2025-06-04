@@ -84,8 +84,8 @@ export class EstimateRequestService {
     });
   }
   /**
-   * 내 견적 요청을 ID로 조회
-   * @param id - 견적 요청 ID
+   * 내 견적 요청을 ID로 상세 조회
+   * @param id - estimate-request ID
    * @param userId - 현재 로그인한 유저의 ID
    * @returns 견적 요청 정보
    * @throws NotFoundException - 요청이 없거나 접근 권한이 없는 경우
