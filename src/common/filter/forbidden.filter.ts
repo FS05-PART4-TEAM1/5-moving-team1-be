@@ -13,13 +13,16 @@ export class ForbiddenExceptionFilter implements ExceptionFilter {
     const request = context.getRequest();
 
     const status = exception.getStatus();
-
+    const message =
+      typeof exception.message === 'string'
+        ? exception.message
+        : '권한이 없습니다!!';
     console.log(`[ForbiddenException] ${request.method} ${request.path}`);
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
-      message: '권한이 없습니다!!',
+      message,
     });
   }
 }
