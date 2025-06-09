@@ -6,8 +6,7 @@ import { EstimateRequest } from './entities/estimate-request.entity';
 import { CustomerProfile } from '@/customer-profile/entities/customer-profile.entity';
 import { Repository } from 'typeorm';
 import { UserInfo } from '@/user/decorator/user-info.decorator';
-import { plainToInstance } from 'class-transformer';
-import { EstimateRequestResponseDto } from './dto/estimate-request-response.dto';
+
 @Injectable()
 export class EstimateRequestService {
   constructor(
@@ -42,14 +41,29 @@ export class EstimateRequestService {
 
     // 3. 저장
     const saved = await this.estimateRequestRepository.save(estimate);
-    const withRelations = await this.estimateRequestRepository.findOne({
+    // 4. 필요한 데이터만 조회하여 반환
+    const result = await this.estimateRequestRepository.findOne({
       where: { id: saved.id },
       relations: ['customer', 'customer.user'],
+      select: {
+        id: true,
+        moveType: true,
+        moveDate: true,
+        fromAddress: true,
+        toAddress: true,
+        customer: {
+          id: true,
+          imageUrl: true,
+          user: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
     });
 
-    return plainToInstance(EstimateRequestResponseDto, withRelations, {
-      excludeExtraneousValues: true,
-    });
+    return result;
   }
 
   findAll() {
